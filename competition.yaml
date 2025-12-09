@@ -1,0 +1,107 @@
+title: X-ray detector calibration using ML
+version: 2 # this means that it is a Codabench bundle
+description: Synchrotron SOLEIL X-ray detector calibration competition
+image: x-ray_detector.jpg
+registration_auto_approve: False  # do not require approval from organizers to join
+docker_image: codalab/codalab-legacy:py39 # the Docker image in which submissions are run
+enable_detailed_results: False
+
+# Documentation web pages
+terms: pages/terms.md
+pages:
+  - title: Introduction
+    file: pages/introduction.md
+  - title: Data
+    file: pages/data.md
+  - title: Evaluation
+    file: pages/evaluation.md
+
+# Definition of the tasks
+tasks:
+- index: 0
+  name: Development Task
+  description: 'Development phase: create models and submit them to obtain feedback.'
+  is_public: false
+  input_data: dev_phase/input_data              # Input data is given to the submitted code (X)
+  reference_data: dev_phase/reference_data      # Reference data is the ground truth (y)
+  scoring_program: scoring_program              # The scoring program compares predictions and ground truth
+  ingestion_program: ingestion_program          # The ingestion program takes a code submission and generates predictions
+- index: 1
+  name: Final Task
+  description: 'Final phase: where model is evaluated against unseen data'
+  is_public: false
+  input_data: final_phase/input_data
+  reference_data: final_phase/reference_data
+  scoring_program: scoring_program
+  ingestion_program: ingestion_program
+solutions: []
+
+# Sample code submission
+# /!\ Solution is an example submission, NOT the ground truth /!\
+solutions:
+  - index: 0
+    tasks:
+    - 0
+    - 1
+    path: solution/
+
+# There are 2 phases: development phase and final phase
+# Each one is linked to a task
+phases:
+- index: 0
+  name: Development
+  description: 'Development phase: create models and submit them to obtain feedback.
+      You can make 5 submissions per day and 100 submissions in total.'
+  start: 11-1-2025 # Month/Day/Year
+  end: 2-15-2026
+  max_submissions_per_day: 5
+  max_submissions: 100
+  execution_time_limit: 3600
+  tasks:
+  - 0
+  solutions: []
+  public_data: dev_phase/input_data
+- index: 1
+  name: Final
+  description: 'Final phase: Evaluate your best model on the final test set.
+    You can make 5 submissions per day and 30 submissions in total.'
+  start: 2-16-2026
+  end: 4-1-2026
+  max_submissions_per_day: 5
+  max_submissions: 30
+  execution_time_limit: 3600
+  tasks:
+  - 1
+  solutions: []
+
+# Fact sheets to add more information in the leaderboard
+fact_sheet: {
+    "method_name": {
+        "key": "method_name",
+        "type": "text",
+        "title": "Method name",
+        "selection": "",
+        "is_required": "false",
+        "is_on_leaderboard": "true"
+    }
+}
+
+# Leaderboard
+leaderboards:
+- index: 0
+  title: Results
+  key: Results
+  submission_rule: "Force_Last"
+  columns:
+      - title: Mean Squared Error
+        key: MSE
+        index: 0
+        sorting: asc
+      - title: R2
+        key: R2
+        index: 1
+        sorting: desc
+      - title: Duration
+        key: duration
+        index: 2
+        sorting: asc
