@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-import torch
 from skada import CORALAdapter, make_da_pipeline
 
 
@@ -21,8 +20,6 @@ class Model:
             self.coral_adapter,
             self.regressor
         )
-        
-        print(f"cuda available = {torch.cuda.is_available()}")
 
     def fit(self, X, y, X_adapt):
         """ Train the model.
