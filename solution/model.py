@@ -15,8 +15,10 @@ FALL_OFFSETS = [0, 1, 2]
 WINSOR_P = 0.05
 MEDIAN_K = 9
 N_KEEP = 480
-BIAS_SCALE = 0.84
-BIAS_EXT_SCALE = 1.0
+BIAS_SCALE = 0.82
+BIAS_SCALE_LO = 1.3
+BIAS_LO_THRESH = 200
+BIAS_EXT_SCALE = 1.025
 NOISE_THRESH = 200
 BIAS_BIN_EDGES = [150, 170, 185, 200, 210, 220, 230, 240, 250, 500]
 
@@ -227,7 +229,8 @@ class Model(BaseEstimator):
 
         for lo, hi, bias in self.bias_table:
             mask = (y_raw >= lo) & (y_raw < hi) & (~noise_mask)
-            y_pred[mask] += BIAS_SCALE * bias
+            bs = BIAS_SCALE_LO if hi <= BIAS_LO_THRESH else BIAS_SCALE
+            y_pred[mask] += bs * bias
 
         from numpy.polynomial import polynomial as P
         src_max = BIAS_BIN_EDGES[-2]
